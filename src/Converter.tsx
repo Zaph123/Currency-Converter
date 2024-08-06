@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
 import loader from './assets/loader.gif'
-import { FaCircleExclamation } from "react-icons/fa6"
+import { FaCircleExclamation, FaArrowsLeftRight} from "react-icons/fa6"
+import { motion } from "framer-motion"
+// import currencyapi from '@everapi/currencyapi-js'
+
+// cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t
 
  interface Currency {
   url: string
@@ -20,6 +24,19 @@ const Converter = (props : Currency) => {
   useEffect(() => {
     fetchCurrencies()
   }, [])
+ 
+  useEffect(() => {
+    // fetch('https://api.currencyapi.com/v3/latest?apikey=cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t')
+    // .then(res => res.json())
+    // .then(data => console.log(data))
+  //   const client = new currencyapi("cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t")
+  //   client.latest({
+  //     base_currency: 'USD',
+  //     currencies: 'EUR'
+  // }).then(response => {
+  //     console.log(response)
+  // });
+  })
 
   useEffect(() => {
     fetchRates()
@@ -72,9 +89,8 @@ const Converter = (props : Currency) => {
   const fetchRates = async () => {
     try {
       const data = await sendRequest(`${props.url}/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
-    // console.log(data)
+    console.log(data)
     setConvertedAmount(data.rates[toCurrency].toFixed(2))
-    // console.log(currencyData);
     } catch (error) {
       console.log(error)
     }
@@ -83,7 +99,7 @@ const Converter = (props : Currency) => {
   
   return (
     <div className="wrapper">
-      <h1 style={{color: "#2a2a2a", textAlign: "center"}}>Currency Converter App</h1>
+      <motion.h1 layout style={{color: "#2a2a2a", textAlign: "center"}}>Currency Converter App</motion.h1>
           {errorStatus && 
           <>
             <img src={loader} />
@@ -91,7 +107,22 @@ const Converter = (props : Currency) => {
         }
         {error !== '' && <h4 className="errMsg"><FaCircleExclamation />{error}</h4>}
       {!errorStatus && 
-      <div className="wrapper-parent">
+      <motion.div 
+      className="wrapper-parent"
+      initial={{
+        opacity: 0,
+        y: "50px"
+      }}
+      animate={{
+        opacity: 1,
+        y: "0"
+      }}
+      transition={{
+        duration: .5,
+        type: "spring",
+        ease: "backInOut"
+      }}
+      >
         <div className="inner">
           <form action="#">
             {loadingAnimation && 
@@ -100,12 +131,13 @@ const Converter = (props : Currency) => {
             <p>Please Wait...</p>
             </div>
             }
+            <p className="info">Results are based on the <b>latest</b> exchange rates Globally</p>
             <div className="row-1">
               <input type="number" value={amount} onChange={e => setAmount(e.target.value)} />
             </div>
             <div className="row-2">
               <div className="col col-1">
-              <label htmlFor="from">From:</label>
+              <label htmlFor="from">
               <select name="from-currency" id="from" value={fromCurrency} onChange={e => setFromCurrency(e.target.value)}>
                 {currencyData.map(c => {
                   return (
@@ -115,9 +147,13 @@ const Converter = (props : Currency) => {
                   )
                 })}
               </select>
+              </label>
+              </div>
+              <div className="exchange-icon">
+                <FaArrowsLeftRight />
               </div>
               <div className="col col-2">
-              <label htmlFor="to">To:</label>
+              <label htmlFor="to">
               <select name="to-currency" id="to"  value={toCurrency} onChange={e => setToCurrency(e.target.value)}>
                 {currencyData.map(c => {
                   return (
@@ -127,6 +163,7 @@ const Converter = (props : Currency) => {
                   )
                 })}
               </select>
+              </label>
               </div>
             </div>
             <div className="row-3">
@@ -137,7 +174,7 @@ const Converter = (props : Currency) => {
             </div>
           </form>
         </div>
-      </div>}
+      </motion.div>}
     </div>
   )
 }
