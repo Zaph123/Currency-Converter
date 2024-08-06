@@ -10,8 +10,8 @@ const Converter = (props : Currency) => {
   
   const [error, setError] = useState('')
   const [errorStatus, setErrorStatus] = useState(false)
-  const [currencyData, setCurrencyData] = useState([])
-  const [amount, setAmount] = useState(1)
+  const [currencyData, setCurrencyData] = useState<string[]>([])
+  const [amount, setAmount] = useState('1')
   const [fromCurrency, setFromCurrency] = useState("USD")
   const [toCurrency, setToCurrency] = useState("EUR")
   const [convertedAmount, setConvertedAmount] = useState(0)
