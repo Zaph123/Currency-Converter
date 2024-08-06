@@ -18,7 +18,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #f3f4f7;
+  background: #fdfdfd;
   gap: 10px;
   padding: 10px;
 }
@@ -30,6 +30,10 @@
   justify-content: center;
   gap: 2px;
   text-align: center;
+}
+.error-triangle{
+  font-size: 50px;
+  margin: 30px 0;
 }
 .loader {
   position: relative;
@@ -48,22 +52,22 @@
 }
 .info{
   padding: 5px 10px; 
-  font-size: 0.78rem; 
+  font-size: 0.75rem; 
   color: #5da4dd; 
   background: #e7f4ff;
   border-radius: 10px;
-  align-self: flex-start;
+  text-align: center;
 }
 .wrapper .wrapper-parent {
   width: 100%;
-  max-width: 450px;
-  height: 300px;
-  padding: 10px;
+  max-width: 500px;
+  height: auto;
+  margin-top: 20px;
 }
 .wrapper-parent .inner {
   width: 100%;
   height: 100%;
-  padding: 10px;
+  padding: 20px 10px;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.082);
@@ -77,6 +81,7 @@
   height: 100%;
   padding: 10px;
   position: relative;
+  gap: 30px;
 }
 .inner form .row-1 {
   width: 100%;
@@ -113,7 +118,7 @@
   width: 100%;
   height: 100%;
 }
-.wrapper-parent .inner form .row-2 .col select {
+.wrapper-parent .inner form .row-2 .col .select {
   border: none;
   cursor: pointer;
   padding: 5px 10px;
@@ -123,13 +128,47 @@
   width: 100%;
   height: 100%;
   font-weight: bold;
-  background: #f3f4f7;
+  background: #fdfdfd;
   /* appearance: none; */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.select h4, .select .angle-icon {
+  color: #999;
+}
+.select:hover h4, .select:hover .angle-icon {
+  color: #292929;
+}
+.select .dropdown {
+  overflow-y: scroll;
+  position: absolute;
+  width: 120px;
+  background: #fff;
+  border-radius: 10px;
+  bottom: 50px;
+  left: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.082);
+}
+.select .dropdown p {
+  width: 100%;
+  padding: 2px 10px;
+  font-size: 14px;
+  color: #999;
+}
+.select .dropdown p:hover{
+  background: #fdfdfd;
+  color: #292929;
 }
 .exchange-icon {
   color: #999;
+  width: 20px;
 }
-.wrapper-parent .inner form .row-2 .col select:hover {
+.exchange-icon svg {
+  width: 100%;
+}
+.wrapper-parent .inner form .row-2 .col .select:hover {
   background: #d7edff;
   border: 1px solid #bee2ff;
 }
