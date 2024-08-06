@@ -129,6 +129,15 @@ const Converter = (props : Currency) => {
       height: "0"
     }
   }
+  const showAngle = {
+    up: {
+      rotate: -90
+    },
+    right: {
+      rotate: 0
+    }
+  }
+
   return (
     <div className="wrapper">
       <motion.h1 layout style={{color: "#2a2a2a", textAlign: "center"}}>Currency Converter App</motion.h1>
@@ -183,7 +192,13 @@ const Converter = (props : Currency) => {
               </label> */}
             <div className="select" onClick={handleDropdown}>
             <h4>{fromCurrency}</h4>
-            <FaAngleRight className="angle-icon"/>
+            <motion.div
+            variants={showAngle}
+            initial='right'
+            animate={showDropdown ? "up" : "right"}
+            >
+              <FaAngleRight className="angle-icon"/>
+            </motion.div>
             <motion.div
             variants={variants}
             initial='hide'
@@ -219,7 +234,13 @@ const Converter = (props : Currency) => {
               </label> */}
               <div className="select" onClick={handleDropdownTwo}>
             <h4>{toCurrency}</h4>
-            <FaAngleRight className="angle-icon"/>
+            <motion.div
+            variants={showAngle}
+            initial='right'
+            animate={showDropdownTwo ? "up" : "right"}
+            >
+              <FaAngleRight className="angle-icon"/>
+            </motion.div>
             <motion.div
             variants={variants}
             initial='hide'
