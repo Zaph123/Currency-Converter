@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react"
 import loader from './assets/loader.gif'
 import { FaCircleExclamation, FaTriangleExclamation, FaAngleRight, FaMagnifyingGlass } from "react-icons/fa6"
 import { motion } from "framer-motion"
-import aud from './assets/flags_png/aud.png'
+// import aud from './assets/flags_png/aud.png'
 import CurrencyInput from "react-currency-input-field"
 // import currencyapi from '@everapi/currencyapi-js'
 
@@ -12,11 +12,11 @@ import CurrencyInput from "react-currency-input-field"
   url: string
 }
 
-interface obj {
-  name: string,
-  symbol: string,
-  flag: string
-}
+// interface obj {
+//   name: string,
+//   symbol: string,
+//   flag: string
+// }
 
 interface currencyDataIndex {
   [key: string]: string
@@ -103,20 +103,20 @@ const Converter = (props : Currency) => {
   const fetchCurrencies = async () => {
     const data = await sendRequest(`${props.url}/currencies`)
     setCurrencyData(data)
-    const keys : obj = {
-      name: "joshua",
-      symbol: "aug",
-      flag: aud
-    }
-    const dataKey = Object.keys(data) as (keyof obj)[]
-    for (let i = 0; i < dataKey.length ; i++){
-      const key = dataKey[i]
-      // const myObj : obj {
-      //   name: 
-      // }
-      // console.log(key, keys[key]);
+    // const keys : obj = {
+    //   name: "joshua",
+    //   symbol: "aug",
+    //   flag: aud
+    // }
+    // const dataKey = Object.keys(data) as (keyof obj)[]
+    // for (let i = 0; i < dataKey.length ; i++){
+    //   const key = dataKey[i]
+    //   // const myObj : obj {
+    //   //   name: 
+    //   // }
+    //   // console.log(key, keys[key]);
       
-    }
+    // }
     // console.log(Object.values(data))
     setCurrencyName(Object.keys(data))
     setFilteredName(currencyName)
