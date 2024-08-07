@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import loader from './assets/loader.gif'
-import { FaCircleExclamation, FaTriangleExclamation, FaAngleRight } from "react-icons/fa6"
+import { FaCircleExclamation, FaTriangleExclamation, FaAngleRight, FaMagnifyingGlass } from "react-icons/fa6"
 import { motion } from "framer-motion"
 import aud from './assets/flags_png/aud.png'
 import CurrencyInput from "react-currency-input-field"
@@ -37,13 +37,16 @@ const Converter = (props : Currency) => {
   const [errorAnimation, setErrorAnimation] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const [showDropdownTwo, setShowDropdownTwo] = useState(false)
+  const [searchQuery, setSearchQuery] = useState<string>("")
+  const [filterdName, setFilteredName] = useState<string[]>([])
+  const [showfilterdName, setShowFilteredName] = useState<boolean>(false)
 
   useEffect(() => {
     fetchCurrencies()
   }, [])
  
   useEffect(() => {
-    // fetch('https://api.currencyapi.com/v3/latest?apikey=cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t')
+    // fetch('https://restcountries.eu/rest/v2/all')
     // .then(res => res.json())
     // .then(data => console.log(data))
   //   const client = new currencyapi("cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t")
@@ -57,7 +60,6 @@ const Converter = (props : Currency) => {
 
   useEffect(() => {
     fetchRates()
-    console.log(currencyData)
   }, [amount, fromCurrency, toCurrency])
   
   
@@ -112,11 +114,12 @@ const Converter = (props : Currency) => {
       // const myObj : obj {
       //   name: 
       // }
-      console.log(key, keys[key]);
+      // console.log(key, keys[key]);
       
     }
     // console.log(Object.values(data))
     setCurrencyName(Object.keys(data))
+    setFilteredName(currencyName)
     // console.log(currencyName);
     
   }
@@ -126,7 +129,7 @@ const Converter = (props : Currency) => {
 
   const fetchRates = async () => {
     try {
-      const data = await sendRequest(`${props.url}/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
+    const data = await sendRequest(`${props.url}/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
     console.log(data)
     setConvertedAmount(data.rates[toCurrency].toFixed(2))
     } catch (error) {
@@ -134,27 +137,41 @@ const Converter = (props : Currency) => {
     }
     
   }
-
-  const handleOptions = (id : string) => {
-     const search = currencyName.filter(c => c === id)
-     setFromCurrency(search[0])
-     console.log(search)
-  }
-
-  const handleOptionsTwo = (id : string) => {
-     const search = currencyName.filter(c => c === id)
-     setToCurrency(search[0])
-     console.log(search)
-  }
   
   const handleDropdown = () => {
     setShowDropdown(!showDropdown)
+    setShowDropdownTwo(false)
   }
 
   const handleDropdownTwo = () => {
+    setShowDropdown(false)
     setShowDropdownTwo(!showDropdownTwo)
   }
+  
+  const handleOptions = (id : string) => {
+     const search = currencyName.filter(c => c === id)
+     setFromCurrency(search[0])
+  }
 
+  const handleOptionsTwo = (id : string) => {
+    const search = currencyName.filter(c => c === id)
+     setToCurrency(search[0])
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value.toLowerCase().trim())
+    if(searchQuery === ""){
+      setShowFilteredName(false)
+    }else{
+      setShowFilteredName(true)
+    }
+    const filter = currencyName.filter(c => c.toLowerCase().includes(searchQuery))
+    setFilteredName(filter)
+    console.log(filterdName);
+    console.log(searchQuery);
+    
+  }
+  
   const variants = {
     show: {
       height: "250px"
@@ -165,7 +182,7 @@ const Converter = (props : Currency) => {
   }
   const showAngle = {
     up: {
-      rotate: -90
+      rotate: 90
     },
     right: {
       rotate: 0
@@ -174,10 +191,10 @@ const Converter = (props : Currency) => {
 
   return (
     <div className="wrapper">
-      <motion.h1 layout style={{color: "#2a2a2a", textAlign: "center"}}>Currency Converter App</motion.h1>
+      <motion.h1 layout className="heading-text" style={{color: "#2a2a2a", textAlign: "center"}}>Always get the real Exchange Rates around the world</motion.h1>
       <motion.p layout className="info">Results are based on the <b>latest</b> Exchange Rates used Globally</motion.p>
           {errorAnimation && <img src={loader} />}
-          {error !== '' &&
+          {errorStatus &&
            <motion.div initial={{scale: 0}} animate={{scale: 1}}>
             <FaTriangleExclamation className="error-triangle"/>
             </motion.div>
@@ -211,7 +228,7 @@ const Converter = (props : Currency) => {
             
           <div className="row-1">
             <div className="col col-1">
-            <div className="select" onClick={handleDropdown}>
+            <div className="select-box" onClick={handleDropdown}>
               <div className="text">
                 <h4>{fromCurrency}</h4>
                 <span>{currencyData[fromCurrency]}</span>
@@ -225,17 +242,26 @@ const Converter = (props : Currency) => {
             </motion.div>
             <motion.div
             variants={variants}
-            initial='hide'
             animate={showDropdown ? "show" : "hide"}
             className="dropdown"
             >
-              {currencyName.map(c => {
+              <div className="search-box" onClick={e => e.stopPropagation()}>
+                <FaMagnifyingGlass style={{color: "#292929"}}/>
+                <input type="text" placeholder="Search Currency..." onChange={handleSearchChange}/>
+              </div>
+              {showfilterdName ? (filterdName.map(c => {
                   return (
-                    <p key={`to_${c}`} onClick={() => handleOptions(c)}>
+                    <p key={`from_${c}`} onClick={() => handleOptions(c)}>
                       {c}
                     </p>
                   )
-                })}
+                })) : (currencyName.map(c => {
+                  return (
+                    <p key={`from_${c}`} onClick={() => handleOptions(c)}>
+                      {c}
+                    </p>
+                  )
+                }))}
               </motion.div>
           </div>
               </div>
@@ -245,7 +271,7 @@ const Converter = (props : Currency) => {
                 </path></svg>
               </div>
             <div className="col col-2">
-            <div className="select" onClick={handleDropdownTwo}>
+            <div className="select-box" onClick={handleDropdownTwo}>
              <div className="text">
                 <h4>{toCurrency}</h4>
                 <span>{currencyData[toCurrency]}</span>
@@ -263,6 +289,10 @@ const Converter = (props : Currency) => {
             animate={showDropdownTwo ? "show" : "hide"}
             className="dropdown"
             >
+              <div className="search-box" onClick={e => e.stopPropagation()}>
+                <FaMagnifyingGlass style={{color: "#292929"}}/>
+                <input type="text" placeholder="Search Currency..." onChange={e => e.stopPropagation()}/>
+              </div>
               {currencyName.map(c => {
                   return (
                     <p key={`to_${c}`} onClick={() => handleOptionsTwo(c)}>
