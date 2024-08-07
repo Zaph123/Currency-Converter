@@ -2,6 +2,8 @@ import { useEffect, useState } from "react"
 import loader from './assets/loader.gif'
 import { FaCircleExclamation, FaTriangleExclamation, FaAngleRight } from "react-icons/fa6"
 import { motion } from "framer-motion"
+import aud from './assets/flags_png/aud.png'
+import CurrencyInput from "react-currency-input-field"
 // import currencyapi from '@everapi/currencyapi-js'
 
 // cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t
@@ -10,11 +12,23 @@ import { motion } from "framer-motion"
   url: string
 }
 
+interface obj {
+  name: string,
+  symbol: string,
+  flag: string
+}
+
+interface currencyDataIndex {
+  [key: string]: string
+}
+
 const Converter = (props : Currency) => {
   
   const [error, setError] = useState('')
   const [errorStatus, setErrorStatus] = useState(false)
-  const [currencyData, setCurrencyData] = useState<string[]>([])
+  const [currency, setCurrency] = useState<obj[]>([])
+  const [currencyData, setCurrencyData] = useState<currencyDataIndex>({})
+  const [currencyName, setCurrencyName] = useState<string[]>([])
   const [amount, setAmount] = useState('1')
   const [fromCurrency, setFromCurrency] = useState("USD")
   const [toCurrency, setToCurrency] = useState("EUR")
@@ -43,6 +57,7 @@ const Converter = (props : Currency) => {
 
   useEffect(() => {
     fetchRates()
+    console.log(currencyData)
   }, [amount, fromCurrency, toCurrency])
   
   
@@ -53,7 +68,7 @@ const Converter = (props : Currency) => {
       
       if(errorStatus){
         setTimeout(() =>{
-         setError(`Service unavailable, Please check your connection and try again`)
+         setError(`Service unavailable, Please check your internet connection and try again`)
         },8000)
   }
     
@@ -68,6 +83,7 @@ const Converter = (props : Currency) => {
       const response = await fetch(url)
       if(!response.ok){
         setLoadingAnimation(false)
+        setErrorAnimation(false)
         setError("Issue may be ranging from wrong params, So Try Again")
         return;
       }
@@ -84,11 +100,29 @@ const Converter = (props : Currency) => {
   
   const fetchCurrencies = async () => {
     const data = await sendRequest(`${props.url}/currencies`)
-    // console.log(data)
-    setCurrencyData(Object.keys(data))
-    // console.log(currencyData);
+    setCurrencyData(data)
+    const keys : obj = {
+      name: "joshua",
+      symbol: "aug",
+      flag: aud
+    }
+    const dataKey = Object.keys(data) as (keyof obj)[]
+    for (let i = 0; i < dataKey.length ; i++){
+      const key = dataKey[i]
+      // const myObj : obj {
+      //   name: 
+      // }
+      console.log(key, keys[key]);
+      
+    }
+    // console.log(Object.values(data))
+    setCurrencyName(Object.keys(data))
+    // console.log(currencyName);
     
   }
+  // useEffect(() => {
+  //   for(i = 0, i < currencyNa)
+  // }, [])
 
   const fetchRates = async () => {
     try {
@@ -102,13 +136,13 @@ const Converter = (props : Currency) => {
   }
 
   const handleOptions = (id : string) => {
-     const search = currencyData.filter(c => c === id)
+     const search = currencyName.filter(c => c === id)
      setFromCurrency(search[0])
      console.log(search)
   }
 
   const handleOptionsTwo = (id : string) => {
-     const search = currencyData.filter(c => c === id)
+     const search = currencyName.filter(c => c === id)
      setToCurrency(search[0])
      console.log(search)
   }
@@ -149,7 +183,7 @@ const Converter = (props : Currency) => {
             </motion.div>
         }
         {error !== '' && <h4 className="errMsg"><FaCircleExclamation /><span>{error}</span></h4>}
-      {!errorStatus && 
+      
       <motion.div 
       className="wrapper-parent"
       initial={{
@@ -174,24 +208,14 @@ const Converter = (props : Currency) => {
             <p>Please Wait...</p>
             </div>
             }
-            <div className="row-1">
-              <input type="number" value={amount} onChange={e => setAmount(e.target.value)} />
-            </div>
-            <div className="row-2">
-              <div className="col col-1">
-              {/* <label htmlFor="from">
-              <select name="from-currency" id="from" value={fromCurrency} onChange={e => setFromCurrency(e.target.value)}>
-                {currencyData.map(c => {
-                  return (
-                    <option value={c} key={`from_${c}`}>
-                      {c}
-                    </option>
-                  )
-                })}
-              </select>
-              </label> */}
+            
+          <div className="row-1">
+            <div className="col col-1">
             <div className="select" onClick={handleDropdown}>
-            <h4>{fromCurrency}</h4>
+              <div className="text">
+                <h4>{fromCurrency}</h4>
+                <span>{currencyData[fromCurrency]}</span>
+              </div>
             <motion.div
             variants={showAngle}
             initial='right'
@@ -205,7 +229,7 @@ const Converter = (props : Currency) => {
             animate={showDropdown ? "show" : "hide"}
             className="dropdown"
             >
-              {currencyData.map(c => {
+              {currencyName.map(c => {
                   return (
                     <p key={`to_${c}`} onClick={() => handleOptions(c)}>
                       {c}
@@ -220,20 +244,12 @@ const Converter = (props : Currency) => {
               <path d="M16.0503 12.0498L21 16.9996L16.0503 21.9493L14.636 20.5351L17.172 17.9988L4 17.9996V15.9996L17.172 15.9988L14.636 13.464L16.0503 12.0498ZM7.94975 2.0498L9.36396 3.46402L6.828 5.9988L20 5.99955V7.99955L6.828 7.9988L9.36396 10.5351L7.94975 11.9493L3 6.99955L7.94975 2.0498Z">
                 </path></svg>
               </div>
-              <div className="col col-2">
-              {/* <label htmlFor="to">
-              <select name="to-currency" id="to"  value={toCurrency} onChange={e => setToCurrency(e.target.value)}>
-                {currencyData.map(c => {
-                  return (
-                    <option value={c} key={`to_${c}`}>
-                      {c}
-                    </option>
-                  )
-                })}
-              </select>
-              </label> */}
-              <div className="select" onClick={handleDropdownTwo}>
-            <h4>{toCurrency}</h4>
+            <div className="col col-2">
+            <div className="select" onClick={handleDropdownTwo}>
+             <div className="text">
+                <h4>{toCurrency}</h4>
+                <span>{currencyData[toCurrency]}</span>
+             </div>
             <motion.div
             variants={showAngle}
             initial='right'
@@ -247,7 +263,7 @@ const Converter = (props : Currency) => {
             animate={showDropdownTwo ? "show" : "hide"}
             className="dropdown"
             >
-              {currencyData.map(c => {
+              {currencyName.map(c => {
                   return (
                     <p key={`to_${c}`} onClick={() => handleOptionsTwo(c)}>
                       {c}
@@ -258,16 +274,30 @@ const Converter = (props : Currency) => {
           </div>
               </div>
             </div>
+
+            <div className="row-2">
+            <CurrencyInput
+              value={amount}
+              onValueChange={(amount) => setAmount(amount ?? '')}
+              intlConfig={{ locale: "en-US", currency: fromCurrency }}
+              allowDecimals={true}
+              allowNegativeValue={false}
+             />
+            </div>
+
             <div className="row-3">
             {errorStatus 
             ? <img src={loader} />
-            : <h1>{`${amount} ${fromCurrency} = ${convertedAmount} ${toCurrency}`}</h1>
+            : <h1>{`${amount} ${fromCurrency}  =  ${convertedAmount} ${toCurrency}`}</h1>
            }
             </div>
           </form>
           
         </div>
-      </motion.div>}
+      </motion.div>
+      <footer>
+        <p>Powered by Einstein Technologies</p>
+      </footer>
     </div>
   )
 }

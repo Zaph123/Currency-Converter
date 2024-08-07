@@ -21,6 +21,7 @@
   background: #fdfdfd;
   gap: 10px;
   padding: 10px;
+  position: relative;
 }
 .errMsg {
   font-size: 14px;
@@ -60,7 +61,7 @@
 }
 .wrapper .wrapper-parent {
   width: 100%;
-  max-width: 500px;
+  max-width: 1000px;
   height: auto;
   margin-top: 20px;
 }
@@ -83,12 +84,12 @@
   position: relative;
   gap: 30px;
 }
-.inner form .row-1 {
+.inner form .row-2 {
   width: 100%;
   height: auto;
   max-width: 400px;
 }
-.inner form .row-1 input {
+.inner form .row-2 input {
   width: 100%;
   height: 45px;
   border: none;
@@ -98,45 +99,51 @@
   padding: 10px;
   color: #2a2a2a;
 }
-.wrapper-parent .inner form .row-2 {
-  width: 100%;
+.wrapper-parent .inner form .row-1 {
+  width: 95%;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  gap: 10px;
+  justify-content: space-evenly;
+  gap: 20px;
+  flex-wrap: wrap;
 }
 
-.wrapper-parent .inner form .row-2 .col {
+.wrapper-parent .inner form .row-1 .col {
   display: flex;
   align-items: center;
   justify-content: space-around;
   gap: 5px;
-  width: 120px;
-  height: 40px;
+  width: 100%;
+  max-width: 400px;
+  height: auto;
 }
-.wrapper-parent .inner form .row-2 .col label {
+/* .wrapper-parent .inner form .row-1 .col label {
   width: 100%;
   height: 100%;
-}
-.wrapper-parent .inner form .row-2 .col .select {
+} */
+.wrapper-parent .inner form .row-1 .col .select {
   border: none;
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 5px;
   outline: none;
-  border: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
   width: 100%;
   height: 100%;
   font-weight: bold;
   background: #fdfdfd;
-  /* appearance: none; */
   position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 5px;
+}
+.select .text span {
+  font-size: 0.7rem;
+  color: #999;
 }
 .select h4, .select .angle-icon {
-  color: #999;
+  color: #646464;
 }
 .select:hover h4, .select:hover .angle-icon {
   color: #292929;
@@ -144,10 +151,10 @@
 .select .dropdown {
   overflow-y: scroll;
   position: absolute;
-  width: 120px;
+  width: 100%;
   background: #fff;
   border-radius: 10px;
-  bottom: 50px;
+  bottom: 70px;
   left: 0;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.082);
 }
@@ -168,9 +175,9 @@
 .exchange-icon svg {
   width: 100%;
 }
-.wrapper-parent .inner form .row-2 .col .select:hover {
+.wrapper-parent .inner form .row-1 .col .select:hover {
   background: #d7edff;
-  border: 1px solid #bee2ff;
+  border-bottom: 1px solid #bee2ff;
 }
 .inner form .row-3{
   padding: 10px 25px;
@@ -183,4 +190,22 @@
   user-select: none;
   font-size: 20px;
   text-align: center;
+}
+
+footer {
+  position: absolute;
+  padding: 10px;
+  width: 100%;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}
+
+@media screen and (max-width: 965px) {
+  .wrapper-parent .inner form .row-1{
+    flex-direction: column;
+  }
 }
