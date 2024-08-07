@@ -26,7 +26,7 @@ const Converter = (props : Currency) => {
   
   const [error, setError] = useState('')
   const [errorStatus, setErrorStatus] = useState(false)
-  const [currency, setCurrency] = useState<obj[]>([])
+  // const [currency, setCurrency] = useState<obj[]>([])
   const [currencyData, setCurrencyData] = useState<currencyDataIndex>({})
   const [currencyName, setCurrencyName] = useState<string[]>([])
   const [amount, setAmount] = useState('1')
