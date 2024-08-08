@@ -1,6 +1,6 @@
 // import { useState } from 'react'
 import './App.css'
-import Converter from './Converter'
+import Converter from './components/Converter'
 
 function App() {
   
