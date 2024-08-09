@@ -203,11 +203,13 @@ const Converter = (props: Currency) => {
   const variants = {
     show: {
       opacity: 1,
-      y: "20px"
+      y: "15px",
+      visibility: "visible"
     },
     hide: {
       opacity: 0,
-      y: "0"
+      y: "0",
+      visibility: "hidden"
     }
   }
   
