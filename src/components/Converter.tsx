@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import loader from '../assets/loader.gif'
-import { FaCircleExclamation, FaTriangleExclamation, } from "react-icons/fa6"
+import { FaCircleExclamation, } from "react-icons/fa6"
+import { TbWifiOff } from "react-icons/tb"
 import { motion } from "framer-motion"
 import SelectCurrency from "./SelectCurrency"
 import atlas from '../assets/img/Atlas.png'
@@ -20,28 +21,36 @@ interface Currency {
 // }
 
 
-interface currencyDataIndex {
-  [key: string]: string
-}
 
+// interface CountryDetails {
+//   country: string;
+//   currency: string;
+// }
+
+interface CountryCurrency {
+  [key: string]: {
+    country: string;
+  currency: string;
+  }
+}
 
 const Converter = (props: Currency) => {
 
   const [error, setError] = useState('')
   const [errorStatus, setErrorStatus] = useState(false)
   // const [currency, setCurrency] = useState<obj[]>([])
-  const [currencyData, setCurrencyData] = useState<currencyDataIndex>({ USD: 'USD', EUR: 'EUR' })
-  const [currencyName, setCurrencyName] = useState<string[]>([])
+  // const [currencyData, setCurrencyData] = useState<currencyDataIndex>({ USD: 'USD', EUR: 'EUR' })
+  const [currencyData, setCurrencyData] = useState<CountryCurrency[]>([])
   const [amount, setAmount] = useState('1')
-  const [fromCurrency, setFromCurrency] = useState("USD")
-  const [toCurrency, setToCurrency] = useState("EUR")
+  const [fromCurrency, setFromCurrency] = useState<string>("USD")
+  const [toCurrency, setToCurrency] = useState<string>("EUR")
   const [convertedAmount, setConvertedAmount] = useState(0)
   const [loadingAnimation, setLoadingAnimation] = useState(false)
   const [errorAnimation, setErrorAnimation] = useState(false)
   const [showDropdown, setShowDropdown] = useState(false)
   const [showDropdownTwo, setShowDropdownTwo] = useState(false)
   const [searchQuery, setSearchQuery] = useState<string>("")
-  const [filteredName, setFilteredName] = useState<string[]>([])
+  const [filteredName, setFilteredName] = useState<CountryCurrency[]>([])
   const [showFilteredName, setShowFilteredName] = useState<boolean>(false)
 
   useEffect(() => {
@@ -67,17 +76,19 @@ const Converter = (props: Currency) => {
 
 
   useEffect(() => {
-    setTimeout(() => {
-      setErrorAnimation(false)
-    }, 8000)
-
+    
     if (errorStatus) {
+      setTimeout(() => {
+        setErrorAnimation(false)
+      }, 8000)
+
       setTimeout(() => {
         setError(`Service unavailable, Please check your internet connection and try again`)
       }, 8000)
     }
 
   }, [errorStatus])
+  
 
   const sendRequest = async (url: string) => {
     try {
@@ -92,7 +103,6 @@ const Converter = (props: Currency) => {
         return;
       }
       setErrorStatus(false)
-      setErrorAnimation(false)
       setLoadingAnimation(false)
       const data = await response.json()
       return data;
@@ -100,12 +110,12 @@ const Converter = (props: Currency) => {
     } catch (error) {
       setErrorStatus(true)
       setErrorAnimation(true)
+      setLoadingAnimation(false)
     }
   }
 
   const fetchCurrencies = async () => {
     const data = await sendRequest(`${props.url}/currencies`)
-    setCurrencyData(data)
     // const keys : obj = {
     //   name: "joshua",
     //   symbol: "aug",
@@ -121,10 +131,15 @@ const Converter = (props: Currency) => {
 
     // }
     // console.log(Object.values(data))
-    setCurrencyName(Object.keys(data))
-    setFilteredName(currencyName)
-    // console.log(currencyName);
+    const arrValues: string[]  = Object.values(data)
+    const arrkeys: string[] = Object.keys(data)
 
+    const mergedArr: CountryCurrency[] = arrValues.map((country: string, i: number) => ({[arrkeys[i]]: {country, currency: arrkeys[i]}}))
+    setCurrencyData(mergedArr)
+    setFilteredName(currencyData)
+    // console.log(currencyData);
+    // console.log(mergedArr);
+    // console.log(arrValues);
   }
   // useEffect(() => {
   //   for(i = 0, i < currencyNa)
@@ -133,7 +148,7 @@ const Converter = (props: Currency) => {
   const fetchRates = async () => {
     try {
       const data = await sendRequest(`${props.url}/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
-      console.log(data)
+      // console.log(data)
       setConvertedAmount(data.rates[toCurrency].toFixed(2))
     } catch (error) {
       console.log(error)
@@ -152,13 +167,23 @@ const Converter = (props: Currency) => {
   }
 
   const handleOptions = async (id: string) => {
-    const search = currencyName.filter(c => c === id)
-    setFromCurrency(search[0])
+    const search = currencyData.filter(c => {
+      const keys = Object.keys(c)[0]
+      if(c[keys].currency === id){
+        return c
+      }
+    })
+    setFromCurrency(search[0][id].currency)
   }
-
+  
   const handleOptionsTwo = async (id: string) => {
-    const search = currencyName.filter(c => c === id)
-    setToCurrency(search[0])
+    const search = currencyData.filter(c => {
+      const keys = Object.keys(c)[0]
+      if(c[keys].currency === id){
+        return c
+      }
+    })
+    setToCurrency(search[0][id].currency)
   }
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +193,7 @@ const Converter = (props: Currency) => {
     } else {
       setShowFilteredName(true)
     }
-    const filter = currencyName.filter(c => c.toLowerCase().includes(searchQuery))
+    const filter = currencyData.filter((c, i) => c[i].currency.toLowerCase().includes(searchQuery))
     setFilteredName(filter)
     console.log(filteredName);
     console.log(searchQuery);
@@ -177,10 +202,12 @@ const Converter = (props: Currency) => {
 
   const variants = {
     show: {
-      height: "250px"
+      opacity: 1,
+      y: "20px"
     },
     hide: {
-      height: "0"
+      opacity: 0,
+      y: "0"
     }
   }
   
@@ -199,14 +226,20 @@ const Converter = (props: Currency) => {
       <div className="bg-img">
         <img src={atlas} alt="atlas" />
       </div>
+      <div className="wrapper-cont">
       <div className="heading">
       <motion.h1 layout className="heading-text" style={{ color: "#2a2a2a", textAlign: "center" }}>Always get the real Exchange Rates around the world</motion.h1>
       <motion.p layout className="info">Results are based on the <b>latest</b> Exchange Rates used Globally</motion.p>
+      {loadingAnimation &&
+              <div className="loader3" style={{position: "absolute", top: '10px'}}>
+                <img src={loader} />
+              </div>
+            }
       </div>
-         {errorAnimation && <img src={loader} />}
+         {errorAnimation && <img src={loader}/>}
       {errorStatus &&
         <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{delay: 8}}>
-          <FaTriangleExclamation className="error-triangle" />
+           <TbWifiOff className="error-triangle" />
         </motion.div>
       }
       {error && <h4 className="errMsg"><FaCircleExclamation /><span>{error}</span></h4>}
@@ -229,16 +262,15 @@ const Converter = (props: Currency) => {
       >
         <div className="inner">
           <form action="#">
-            {loadingAnimation &&
+            {/* {loadingAnimation &&
               <div className="loader">
                 <img src={loader} />
                 <p>Getting Data...</p>
               </div>
-            }
+            } */}
 
             <div className="row-1">
               <SelectCurrency
-                currencyName={currencyName}
                 handleSearchChange={handleSearchChange}
                 showFilteredName={showFilteredName}
                 filteredName={filteredName}
@@ -246,7 +278,7 @@ const Converter = (props: Currency) => {
                 handleOptions={handleOptions}
                 variants={variants}
                 handleDropdown={handleDropdown}
-                Currency={fromCurrency}
+                currencyName={fromCurrency}
                 currencyData={currencyData}
                 showAngle={showAngle}
               >
@@ -258,7 +290,6 @@ const Converter = (props: Currency) => {
                   </path></svg>
               </div>
               <SelectCurrency
-                currencyName={currencyName}
                 handleSearchChange={handleSearchChange}
                 showFilteredName={showFilteredName}
                 filteredName={filteredName}
@@ -266,7 +297,7 @@ const Converter = (props: Currency) => {
                 handleOptions={handleOptionsTwo}
                 variants={variants}
                 handleDropdown={handleDropdownTwo}
-                Currency={toCurrency}
+                currencyName={toCurrency}
                 currencyData={currencyData}
                 showAngle={showAngle}
               >
@@ -294,6 +325,7 @@ const Converter = (props: Currency) => {
 
         </div>
       </motion.div>}
+      </div>
       <footer>
         <p>Powered by Einstein Technologies</p>
       </footer>
