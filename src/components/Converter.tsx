@@ -205,7 +205,7 @@ const Converter = (props: Currency) => {
       </div>
       <div className="wrapper-cont">
       <div className="heading">
-      <motion.h1 layout className="heading-text">Always get the real-time Exchange Rates around the world</motion.h1>
+      <motion.h1 layout className="heading-text">Always get real-time Exchange Rates around the <span>World</span></motion.h1>
       <motion.p layout className="info">Results are based on the <b>latest</b> Exchange Rates used Globally</motion.p>
       {loadingAnimation &&
               <div className="loader3" style={{position: "absolute", top: '10px'}}>
@@ -283,7 +283,9 @@ const Converter = (props: Currency) => {
             </div>
 
             <div className="row-2">
+              <label htmlFor="amount">Amount:</label>
               <CurrencyInput
+                id="amount"
                 value={amount}
                 onValueChange={(amount) => setAmount(amount ?? '')}
                 intlConfig={{ locale: "en-US", currency: fromCurrency }}
