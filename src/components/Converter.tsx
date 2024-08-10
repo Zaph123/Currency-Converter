@@ -6,9 +6,11 @@ import { motion } from "framer-motion"
 import SelectCurrency from "./SelectCurrency"
 import atlas from '../assets/img/Atlas.png'
 import CurrencyInput from "react-currency-input-field"
+// import Sticky from "./Sticky"
 // import currencyapi from '@everapi/currencyapi-js'
 
 // API_KEY: cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t
+//NEWS_API_KEY: 7e898b7cdf4d4f8687ea180bc19ee62b
 
 interface Currency {
   url: string
@@ -45,17 +47,17 @@ const Converter = (props: Currency) => {
   //Boiler plate useEffect Hook for fetching other currency Converter Api `if any` other than
   //the current one being used
   // useEffect(() => {
-  //   fetch('https://restcountries.eu/rest/v2/all')
+  //   fetch('https://newsapi.org/v2/everything?q=keyword&apiKey=7e898b7cdf4d4f8687ea180bc19ee62b')
   //   .then(res => res.json())
   //   .then(data => console.log(data))
-  //     const client = new currencyapi("cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t")
-  //     client.latest({
-  //       base_currency: 'USD',
-  //       currencies: 'EUR'
-  //   }).then(response => {
-  //       console.log(response)
-  //   });
-  // })
+  //   //   const client = new currencyapi("cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t")
+  //   //   client.latest({
+  //   //     base_currency: 'USD',
+  //   //     currencies: 'EUR'
+  //   // }).then(response => {
+  //   //     console.log(response)
+  //   // });
+  // },[])
 
   useEffect(() => {
     fetchRates()
@@ -198,9 +200,10 @@ const Converter = (props: Currency) => {
 
 
   return (
+    <>
     <div className="wrapper">
       {loadingAnimation &&
-              <div className="loader3" style={{position: "fixed", top: '10px'}}>
+              <div className="loader3" style={{position: "fixed", top: '-10px'}}>
                 <img src={loader} />
               </div>
             }
@@ -310,9 +313,11 @@ const Converter = (props: Currency) => {
       </motion.div>}
       </div>
       <footer>
-        <p>Powered by <span>Einstein Technologies</span></p>
+        <p>Powered by <span className="">Einstein Technologies</span></p>
       </footer>
     </div>
+     {/* <Sticky /> */}
+    </>
   )
 }
 
