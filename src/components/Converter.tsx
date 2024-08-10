@@ -8,24 +8,11 @@ import atlas from '../assets/img/Atlas.png'
 import CurrencyInput from "react-currency-input-field"
 // import currencyapi from '@everapi/currencyapi-js'
 
-// cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t
+// API_KEY: cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t
 
 interface Currency {
   url: string
 }
-
-// interface obj {
-//   name: string,
-//   symbol: string,
-//   flag: string
-// }
-
-
-
-// interface CountryDetails {
-//   country: string;
-//   currency: string;
-// }
 
 interface CountryCurrency {
   [key: string]: {
@@ -38,17 +25,15 @@ const Converter = (props: Currency) => {
 
   const [error, setError] = useState('')
   const [errorStatus, setErrorStatus] = useState(false)
-  // const [currency, setCurrency] = useState<obj[]>([])
-  // const [currencyData, setCurrencyData] = useState<currencyDataIndex>({ USD: 'USD', EUR: 'EUR' })
   const [currencyData, setCurrencyData] = useState<CountryCurrency[]>([])
-  const [amount, setAmount] = useState('1')
+  const [amount, setAmount] = useState<string>('1')
   const [fromCurrency, setFromCurrency] = useState<string>("USD")
   const [toCurrency, setToCurrency] = useState<string>("EUR")
-  const [convertedAmount, setConvertedAmount] = useState(0)
-  const [loadingAnimation, setLoadingAnimation] = useState(false)
-  const [errorAnimation, setErrorAnimation] = useState(false)
-  const [showDropdown, setShowDropdown] = useState(false)
-  const [showDropdownTwo, setShowDropdownTwo] = useState(false)
+  const [convertedAmount, setConvertedAmount] = useState<number>(0)
+  const [loadingAnimation, setLoadingAnimation] = useState<boolean>(false)
+  const [errorAnimation, setErrorAnimation] = useState<boolean>(false)
+  const [showDropdown, setShowDropdown] = useState<boolean>(false)
+  const [showDropdownTwo, setShowDropdownTwo] = useState<boolean>(false)
   const [searchQuery, setSearchQuery] = useState<string>("")
   const [filteredName, setFilteredName] = useState<CountryCurrency[]>([])
   const [showFilteredName, setShowFilteredName] = useState<boolean>(false)
@@ -57,18 +42,20 @@ const Converter = (props: Currency) => {
     fetchCurrencies()
   }, [])
 
-  useEffect(() => {
-    // fetch('https://restcountries.eu/rest/v2/all')
-    // .then(res => res.json())
-    // .then(data => console.log(data))
-    //   const client = new currencyapi("cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t")
-    //   client.latest({
-    //     base_currency: 'USD',
-    //     currencies: 'EUR'
-    // }).then(response => {
-    //     console.log(response)
-    // });
-  })
+  //Boiler plate useEffect Hook for fetching other currency Converter Api `if any` other than
+  //the current one being used
+  // useEffect(() => {
+  //   fetch('https://restcountries.eu/rest/v2/all')
+  //   .then(res => res.json())
+  //   .then(data => console.log(data))
+  //     const client = new currencyapi("cur_live_nIlpjZw8P7fXBVbxFw1LmJt8T580e0kXlRqZKg2t")
+  //     client.latest({
+  //       base_currency: 'USD',
+  //       currencies: 'EUR'
+  //   }).then(response => {
+  //       console.log(response)
+  //   });
+  // })
 
   useEffect(() => {
     fetchRates()
@@ -89,7 +76,7 @@ const Converter = (props: Currency) => {
 
   }, [errorStatus])
   
-
+//This Makes a Request(fetch) to the api for the whole data 
   const sendRequest = async (url: string) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -113,59 +100,42 @@ const Converter = (props: Currency) => {
       setLoadingAnimation(false)
     }
   }
-
+//This makes a request for all currencies from the api using the Endpoint(currencies)
   const fetchCurrencies = async () => {
     const data = await sendRequest(`${props.url}/currencies`)
-    // const keys : obj = {
-    //   name: "joshua",
-    //   symbol: "aug",
-    //   flag: aud
-    // }
-    // const dataKey = Object.keys(data) as (keyof obj)[]
-    // for (let i = 0; i < dataKey.length ; i++){
-    //   const key = dataKey[i]
-    //   // const myObj : obj {
-    //   //   name: 
-    //   // }
-    //   // console.log(key, keys[key]);
-
-    // }
-    // console.log(Object.values(data))
     const arrValues: string[]  = Object.values(data)
     const arrkeys: string[] = Object.keys(data)
 
     const mergedArr: CountryCurrency[] = arrValues.map((country: string, i: number) => ({[arrkeys[i]]: {country, currency: arrkeys[i]}}))
     setCurrencyData(mergedArr)
     setFilteredName(currencyData)
-    // console.log(currencyData);
-    // console.log(mergedArr);
-    // console.log(arrValues);
   }
-  // useEffect(() => {
-  //   for(i = 0, i < currencyNa)
-  // }, [])
 
+  // This makes a request for the latest conversion rates between the base currency and the latter currency
   const fetchRates = async () => {
     try {
       const data = await sendRequest(`${props.url}/latest?amount=${amount}&from=${fromCurrency}&to=${toCurrency}`)
-      // console.log(data)
       setConvertedAmount(data.rates[toCurrency].toFixed(2))
     } catch (error) {
       console.log(error)
     }
 
   }
-
+  
+  //This handles All Currencies Dropdown Menu for the `FROM` currency 
   const handleDropdown = () => {
     setShowDropdown(!showDropdown)
     setShowDropdownTwo(false)
   }
 
+  //This handles All Currencies Dropdown Menu for the `TO` currency 
   const handleDropdownTwo = () => {
     setShowDropdown(false)
     setShowDropdownTwo(!showDropdownTwo)
   }
-
+  
+  //This handles the resultant currency name gotten from clicking on one of the
+  //`FROM` currency Dropdown Menu
   const handleOptions = async (id: string) => {
     const search = currencyData.filter(c => {
       const keys = Object.keys(c)[0]
@@ -176,6 +146,8 @@ const Converter = (props: Currency) => {
     setFromCurrency(search[0][id].currency)
   }
   
+  //This handles the resultant currency name gotten from clicking on one of the
+  //`TO` currency Dropdown Menu
   const handleOptionsTwo = async (id: string) => {
     const search = currencyData.filter(c => {
       const keys = Object.keys(c)[0]
@@ -186,6 +158,7 @@ const Converter = (props: Currency) => {
     setToCurrency(search[0][id].currency)
   }
 
+  //This handles The Search Query for all currencies in the both Dropdown Menu's
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value.toLowerCase().trim())
     if (searchQuery === "") {
@@ -200,6 +173,7 @@ const Converter = (props: Currency) => {
 
   }
 
+  //This controls the Dropdown Menu SHOW/HIDE Animation Effect
   const variants = {
     show: {
       opacity: 1,
@@ -212,7 +186,7 @@ const Converter = (props: Currency) => {
       visibility: "hidden"
     }
   }
-  
+  //This controls the ANGLE ICON UP/RIGHT motion
   const showAngle = {
     up: {
       rotate: 90
@@ -225,12 +199,13 @@ const Converter = (props: Currency) => {
 
   return (
     <div className="wrapper">
+      <h1 className="logo">CONVERTex</h1>
       <div className="bg-img">
         <img src={atlas} alt="atlas" />
       </div>
       <div className="wrapper-cont">
       <div className="heading">
-      <motion.h1 layout className="heading-text" style={{ color: "#2a2a2a", textAlign: "center" }}>Always get the real Exchange Rates around the world</motion.h1>
+      <motion.h1 layout className="heading-text">Always get the real-time Exchange Rates around the world</motion.h1>
       <motion.p layout className="info">Results are based on the <b>latest</b> Exchange Rates used Globally</motion.p>
       {loadingAnimation &&
               <div className="loader3" style={{position: "absolute", top: '10px'}}>
