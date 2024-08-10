@@ -104,6 +104,7 @@
   font-size: 3rem;
   color: var(--prim-black);
   transition: .5s;
+  font-weight: bold;
 }
 .heading-text span {
   background: var(--prim-dark);
@@ -193,7 +194,7 @@
   color: #2a2a2a;
 }
 .inner form .row-2 input:focus {
-  outline: 1px solid #bee2ff;
+  outline: 1px solid #cec4ff;
 }
 .wrapper-parent .inner form .row-1 {
   width: 95%;
@@ -234,10 +235,18 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 20px;
+  transition: .3s;
 }
 .select-box .text span {
   font-size: 0.7rem;
   color: var(--sec-lightpurple);
+}
+.wrapper-parent .inner form .row-1 .col .select-box:hover {
+  background: #e6e1ff;
+  border-bottom: 1px solid #cec4ff;
+}
+.wrapper-parent .inner form .row-1 .col .select-box:active {
+  background: #cec4ff;
 }
 .select-box h4, .select-box .angle-icon {
   color: #646464;
@@ -255,6 +264,7 @@
   left: 0;
   z-index: 10;
   height: 250px;
+  padding: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.082);
 }
  .select-box .dropdown::-webkit-scrollbar-track{
@@ -282,6 +292,7 @@
   justify-content: center;
   gap: 5px;
   padding: 0 10px;
+  border-radius: 10px;
   border-bottom: 1px solid var(--prim-white2);
 }
 .dropdown .search-box input{
@@ -290,22 +301,24 @@
   outline: none;
   padding: 10px;
   border: none;
+  font-weight: normal;
+  font-size: 0.9rem;
 }
 .select-box .dropdown p {
   width: 100%;
-  padding: 2px 10px;
+  padding: 10px;
   font-size: 14px;
   color: #999;
-  margin: 5px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-radius: 10px;
 }
 .select-box .dropdown p span:first-child{
   color: #292929;
 }
 .select-box .dropdown p:hover{
-  background: #fdfdfd;
+  background: var(--prim-white2);
   color: #292929;
 }
 .exchange-icon {
@@ -315,17 +328,13 @@
 .exchange-icon svg {
   width: 100%;
 }
-.wrapper-parent .inner form .row-1 .col .select-box:hover {
-  background: #d7edff;
-  border-bottom: 1px solid #bee2ff;
-}
 .inner form .row-3{
   padding: 10px 25px;
   background: #2a2a2a;
   border-radius: 10px;
 }
 .inner form .row-3 h1 {
-  color: #5da4dd;
+  color: #b0a6e4;
   pointer-events: none;
   user-select: none;
   font-size: 20px;
