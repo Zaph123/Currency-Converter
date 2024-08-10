@@ -199,7 +199,16 @@ const Converter = (props: Currency) => {
 
   return (
     <div className="wrapper">
+      {loadingAnimation &&
+              <div className="loader3" style={{position: "fixed", top: '10px'}}>
+                <img src={loader} />
+              </div>
+            }
       <h1 className="logo">CONVERTex</h1>
+      <div className="bg"></div>
+      {/* <video className="overlay" preload="metadata" loop muted webkit-playsinline="" playsInline>
+               <source src="https://www.mewsunfold.com/assets/video/Unfold_Animation_Loop_0036_Compressed.mp4#t=0.5" type="video/mp4"/>
+            </video> */}
       <div className="bg-img">
         <img src={atlas} alt="atlas" />
       </div>
@@ -207,11 +216,6 @@ const Converter = (props: Currency) => {
       <div className="heading">
       <motion.h1 layout className="heading-text">Always get real-time Exchange Rates around the <span>World</span></motion.h1>
       <motion.p layout className="info">Results are based on the <b>latest</b> Exchange Rates used Globally</motion.p>
-      {loadingAnimation &&
-              <div className="loader3" style={{position: "absolute", top: '10px'}}>
-                <img src={loader} />
-              </div>
-            }
       </div>
          {errorAnimation && <img src={loader}/>}
       {errorStatus &&
@@ -238,7 +242,7 @@ const Converter = (props: Currency) => {
         }}
       >
         <div className="inner">
-          <form action="#">
+          <form> 
             {/* {loadingAnimation &&
               <div className="loader">
                 <img src={loader} />
@@ -306,7 +310,7 @@ const Converter = (props: Currency) => {
       </motion.div>}
       </div>
       <footer>
-        <p>Powered by Einstein Technologies</p>
+        <p>Powered by <span>Einstein Technologies</span></p>
       </footer>
     </div>
   )
