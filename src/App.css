@@ -13,12 +13,14 @@
 
 :root {
   --prim-white: #fff;
+  --prim-black: #000;
   --prim-dark: #1b1b1b;
   --prim-white2: #f3f4f7;
   --prim-dark2: #292929;
   --dark-grey-600: #2a2a2a;
   --dark-grey-400: #999;
   --sec-lightblue: #5da4dd;
+  --sec-lightpurple: #A095D5;
   --sec-lightblue-300: #bee2ff;
   --sec-lightblue-200: #e7f4ff;
   --sec-lightblue-100: #d7edff;
@@ -58,7 +60,7 @@
   left: 0;
   top: 40px;
   height: 300px;
-  background: #A095D5;
+  background: linear-gradient(301deg, #A095D5, #AAA5D8);
   z-index: -1;
 }
 .bg-img {
@@ -95,11 +97,11 @@
   width: 100%;
   text-align: center;
   font-size: 3rem;
-  color: var(--prim-dark2);
+  color: var(--prim-black);
   transition: .5s;
 }
 .heading-text span {
-  background: var(--prim-dark2);
+  background: var(--prim-dark);
   color: #fff;
   padding: 0 10px;
 }
@@ -230,7 +232,7 @@
 }
 .select-box .text span {
   font-size: 0.7rem;
-  color: var(--sec-lightblue);
+  color: var(--sec-lightpurple);
 }
 .select-box h4, .select-box .angle-icon {
   color: #646464;
@@ -337,7 +339,7 @@ footer {
   font-size: 0.9rem;
 }
 footer p span{
-  color: #524a7a;
+  color: #7d74ad;
 }
 @media screen and (max-width: 965px) {
   .wrapper-parent .inner form .row-1{
